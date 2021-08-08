@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-4.2.xsd 
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<context:component-scan base-package="com.hp"></context:component-scan>
+	<!-- 数据源 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>	
+		<property name="url" value="jdbc:mysql://localhost:3306/yuekao1"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="123"></property>
+	</bean>
+	<!-- 构建 sqlSessionFactory-->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- sqlSession离不开数据源  注入数据源 -->
+		<property name="dataSource" ref="dataSource"></property>	
+		<!-- 给实体类起别名 -->
+		<property name="typeAliasesPackage">
+			<value>com.hp.entity</value>
+		</property>
+		<!-- 注册mapper -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:com/hp/dao/*DaoMapper.xml</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 创建dao实现类对象 -->
+	<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
+		<!-- 告知spring给哪一个包下的接口创建实现类对象 -->
+		<property name="basePackage">
+			<value>com.hp.dao</value>
+		</property>	
+	</bean>
+	
+</beans>
